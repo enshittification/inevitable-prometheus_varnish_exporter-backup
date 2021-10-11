@@ -53,10 +53,11 @@ type startParams struct {
 type varnishstatParams struct {
 	Instance string
 	VSM      string
+	Fields   string
 }
 
 func (p *varnishstatParams) isEmpty() bool {
-	return p.Instance == "" && p.VSM == ""
+	return p.Instance == "" && p.VSM == "" && p.Fields == ""
 }
 
 func (p *varnishstatParams) make() (params []string) {
@@ -67,6 +68,10 @@ func (p *varnishstatParams) make() (params []string) {
 	// -N is not supported by 3.x
 	if p.VSM != "" && VarnishVersion.EqualsOrGreater(4, 0) {
 		params = append(params, "-N", p.VSM)
+	}
+	// -f
+	if p.Fields != "" {
+		params = append(params, "-f", p.Fields)
 	}
 	return params
 }
@@ -81,6 +86,7 @@ func main() {
 	flag.StringVar(&StartParams.VarnishstatExe, "varnishstat-path", StartParams.VarnishstatExe, "Path to varnishstat.")
 	flag.StringVar(&StartParams.Params.Instance, "n", StartParams.Params.Instance, "varnishstat -n value.")
 	flag.StringVar(&StartParams.Params.VSM, "N", StartParams.Params.VSM, "varnishstat -N value.")
+	flag.StringVar(&StartParams.Params.Fields, "f", StartParams.Params.Fields, "varnishstat -f value.")
 
 	// docker
 	flag.StringVar(&StartParams.VarnishDockerContainer, "docker-container-name", StartParams.VarnishDockerContainer, "Docker container name to exec varnishstat in.")
