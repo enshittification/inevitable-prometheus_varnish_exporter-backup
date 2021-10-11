@@ -213,7 +213,11 @@ func executeVarnishstat(varnishstatExe string, params ...string) (*bytes.Buffer,
 	buf := &bytes.Buffer{}
 	var cmd *exec.Cmd
 	if len(StartParams.VarnishDockerContainer) == 0 {
-		cmd = exec.Command(varnishstatExe, params...)
+		if StartParams.UseSudo {
+			cmd = exec.Command("sudo", append([]string{varnishstatExe}, params...)...)
+		} else {
+			cmd = exec.Command(varnishstatExe, params...)
+		}
 	} else {
 		cmd = exec.Command("docker", append([]string{"exec", "-t", StartParams.VarnishDockerContainer, varnishstatExe}, params...)...)
 	}

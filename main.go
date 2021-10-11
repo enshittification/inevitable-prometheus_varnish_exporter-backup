@@ -46,6 +46,7 @@ type startParams struct {
 	Test          bool
 	Raw           bool
 	WithGoMetrics bool
+	UseSudo       bool
 
 	noExit bool // deprecated
 }
@@ -99,6 +100,9 @@ func main() {
 	flag.BoolVar(&StartParams.Test, "test", StartParams.Test, "Test varnishstat availability, prints available metrics and exits.")
 	flag.BoolVar(&StartParams.Raw, "raw", StartParams.Test, "Raw stdout logging without timestamps.")
 	flag.BoolVar(&StartParams.WithGoMetrics, "with-go-metrics", StartParams.WithGoMetrics, "Export go runtime and http handler metrics")
+
+	// sudo
+	flag.BoolVar(&StartParams.UseSudo, "sudo", StartParams.UseSudo, "Execute varnishstat with sudo")
 
 	// deprecated
 	flag.BoolVar(&StartParams.noExit, "no-exit", StartParams.noExit, "Deprecated: see -exit-on-errors")
